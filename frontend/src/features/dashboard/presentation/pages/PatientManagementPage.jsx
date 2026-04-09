@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Users, Search, Filter, Download, MoreVertical, Edit, FileText, Trash2, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { adminService } from '../../application/adminService';
+import Swal from 'sweetalert2';
 
 const PatientManagementPage = () => {
   const navigate = useNavigate();
@@ -9,6 +10,33 @@ const PatientManagementPage = () => {
   const [patients, setPatients] = useState([]);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Custom Styled Swal
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    background: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#f1f5f9' : '#1e293b',
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  });
+
+  const customSwal = Swal.mixin({
+    customClass: {
+      popup: 'rounded-3xl border border-gray-100 dark:border-slate-800 shadow-2xl dark:bg-slate-900',
+      title: 'text-2xl font-black text-rs-dark-blue dark:text-white',
+      confirmButton: 'px-6 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30',
+      cancelButton: 'px-6 py-3 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 font-bold rounded-xl'
+    },
+    buttonsStyling: false,
+    background: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#f1f5f9' : '#1e293b',
+  });
 
   // Fetch real data
   useEffect(() => {
@@ -19,6 +47,10 @@ const PatientManagementPage = () => {
         setFilteredPatients(data);
       } catch (err) {
         console.error('Failed to fetch patients', err);
+        Toast.fire({
+          icon: 'error',
+          title: 'Gagal memuat data pasien'
+        });
       } finally {
         setLoading(false);
       }
@@ -39,6 +71,85 @@ const PatientManagementPage = () => {
       ));
     }
   }, [searchTerm, patients]);
+
+  const handleViewRecords = (id) => {
+    customSwal.fire({
+      icon: 'info',
+      title: 'Rekam Medis',
+      text: `Membuka direktori rekam medis pasien ID: ${id}`,
+      confirmButtonText: 'Tutup'
+    });
+  };
+
+  const handleEdit = (patient) => {
+    customSwal.fire({
+      icon: 'warning',
+      title: 'Fitur Segera Hadir',
+      text: `Formulir pengeditan data untuk ${patient.name} sedang dalam tahap pengembangan.`,
+      confirmButtonText: 'Siap!'
+    });
+  };
+
+  const handleDelete = async (id, name) => {
+    const result = await customSwal.fire({
+      title: 'Hapus Data?',
+      text: `Data pasien ${name} dan seluruh riwayatnya akan hilang secara permanen.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Batalkan',
+      reverseButtons: true
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await adminService.deletePatient(id);
+        setPatients(prev => prev.filter(p => p.id !== id));
+        Toast.fire({
+          icon: 'success',
+          title: 'Data pasien berhasil dihapus'
+        });
+      } catch (err) {
+        console.error('Delete failed', err);
+        Toast.fire({
+          icon: 'error',
+          title: 'Gagal menghapus data'
+        });
+      }
+    }
+  };
+
+  const handleExportExcel = () => {
+    // Simple CSV export
+    try {
+      const headers = ['Tgl Kunjungan', 'Nama', 'NIK', 'Passport', 'Gender', 'Pelayanan', 'Status'];
+      const rows = filteredPatients.map(p => [
+        p.date, p.name, p.nik, p.passport, p.gender, p.latestVax, p.status
+      ]);
+      
+      let csvContent = "data:text/csv;charset=utf-8," 
+        + headers.join(",") + "\n"
+        + rows.map(e => e.join(",")).join("\n");
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `data_pasien_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      Toast.fire({
+        icon: 'success',
+        title: 'Laporan berhasil diekspor'
+      });
+    } catch (err) {
+      Toast.fire({
+        icon: 'error',
+        title: 'Export gagal'
+      });
+    }
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -64,7 +175,10 @@ const PatientManagementPage = () => {
           </div>
         </div>
         
-        <button className="px-5 py-3 bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 hover:translate-y-[-2px] transition-all">
+        <button 
+          onClick={handleExportExcel}
+          className="px-5 py-3 bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 hover:translate-y-[-2px] transition-all"
+        >
           <Download size={20} /> Export Excel
         </button>
       </div>
@@ -134,13 +248,19 @@ const PatientManagementPage = () => {
                     </td>
                     <td className="py-4 px-6 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors" title="Lihat Rekam Medis">
+                        <button 
+                          onClick={() => handleViewRecords(patient.id)}
+                          className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors" title="Lihat Rekam Medis">
                           <FileText size={18} />
                         </button>
-                        <button className="p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-colors" title="Edit Data">
+                        <button 
+                          onClick={() => handleEdit(patient)}
+                          className="p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-colors" title="Edit Data">
                           <Edit size={18} />
                         </button>
-                        <button className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors" title="Hapus Data">
+                        <button 
+                          onClick={() => handleDelete(patient.id, patient.name)}
+                          className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors" title="Hapus Data">
                           <Trash2 size={18} />
                         </button>
                       </div>

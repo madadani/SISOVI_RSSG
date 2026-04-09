@@ -34,5 +34,10 @@ export const adminService = {
   async getCertificates() {
     const response = await axiosInstance.get('/api/admin/certificates');
     return response.data;
+  },
+
+  async deletePatient(id) {
+    const response = await axiosInstance.delete(`/api/admin/patients/${id}`);
+    return response.data;
   }
 };

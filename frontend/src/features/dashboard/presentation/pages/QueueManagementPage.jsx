@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Clock, Play, SkipForward, PauseCircle, CheckCircle, Volume2, UserX, Search, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { adminService } from '../../application/adminService';
+import Swal from 'sweetalert2';
 
 const QueueManagementPage = () => {
   const navigate = useNavigate();
@@ -10,6 +11,29 @@ const QueueManagementPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
+  // Custom Styled Swal
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    background: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#f1f5f9' : '#1e293b',
+  });
+
+  const customSwal = Swal.mixin({
+    customClass: {
+      popup: 'rounded-3xl border border-gray-100 dark:border-slate-800 shadow-2xl dark:bg-slate-900',
+      title: 'text-2xl font-black text-rs-dark-blue dark:text-white',
+      confirmButton: 'px-6 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30',
+      cancelButton: 'px-6 py-3 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 font-bold rounded-xl'
+    },
+    buttonsStyling: false,
+    background: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#f1f5f9' : '#1e293b',
+  });
+
   const fetchQueue = async () => {
     try {
       const data = await adminService.getQueues();
@@ -17,7 +41,6 @@ const QueueManagementPage = () => {
       const active = data.find(q => q.status === 'CALLED' || q.status === 'SCREENING' || q.status === 'VACCINATING') || null;
       let waiting = data.filter(q => q.id !== active?.id && q.status !== 'DONE' && q.status !== 'SKIPPED');
       
-      // if no active but we have waiting, grab first waiting queue? Let's just keep it null until they call
       setActivePatient(active);
       setQueue(waiting);
     } catch (err) {
@@ -29,13 +52,15 @@ const QueueManagementPage = () => {
 
   useEffect(() => {
     fetchQueue();
-    // simulate real-time polling
     const intv = setInterval(fetchQueue, 15000);
     return () => clearInterval(intv);
   }, []);
 
   const handleNext = async () => {
-    if (queue.length === 0) return;
+    if (queue.length === 0) {
+      Toast.fire({ icon: 'info', title: 'Antrian sudah habis' });
+      return;
+    }
     
     // Mark current as done if there was one
     if (activePatient) {
@@ -45,21 +70,39 @@ const QueueManagementPage = () => {
     const nextList = [...queue];
     const nextPatient = nextList.shift();
     
-    // Set next to CALLED
     await adminService.setQueueStatus(nextPatient.id, 'CALLED');
-    nextPatient.status = 'CALLED';
     
-    setActivePatient(nextPatient);
-    setQueue(nextList);
-    // Let's refetch completely to be safe
+    Toast.fire({
+      icon: 'success',
+      title: `Memanggil ${nextPatient.name}`
+    });
+
     fetchQueue();
   };
 
   const handleSkipOrMarkAsDone = async (statusArg) => {
      if(!activePatient) return;
-     await adminService.setQueueStatus(activePatient.id, statusArg);
-     setActivePatient(null);
-     fetchQueue();
+
+     const actionText = statusArg === 'DONE' ? 'Selesaikan' : 'Lewati';
+
+     const result = await customSwal.fire({
+        title: `${actionText} Antrian?`,
+        text: `Konfirmasi untuk ${actionText.toLowerCase()} pasien ${activePatient.name}.`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Iya, Lanjutkan',
+        cancelButtonText: 'Batal'
+     });
+
+     if (result.isConfirmed) {
+        try {
+          await adminService.setQueueStatus(activePatient.id, statusArg);
+          Toast.fire({ icon: 'success', title: 'Status diperbarui' });
+          fetchQueue();
+        } catch (err) {
+          Toast.fire({ icon: 'error', title: 'Gagal memperbarui status' });
+        }
+     }
   };
 
   const getStatusBadge = (status) => {

@@ -83,6 +83,7 @@ export function createRouter(): Router {
   
   // Admin Routes
   router.get('/api/admin/patients', (req, res) => adminCtrl.getPatients(req, res));
+  router.delete('/api/admin/patients/:id', (req, res) => adminCtrl.deletePatient(req, res));
   router.get('/api/admin/queues', (req, res) => adminCtrl.getQueues(req, res));
   router.put('/api/admin/queues/:queueNumber/status', (req, res) => adminCtrl.setQueueStatus(req, res));
   router.get('/api/admin/certificates', (req, res) => adminCtrl.getCertificates(req, res));
