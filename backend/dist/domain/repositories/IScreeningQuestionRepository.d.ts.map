@@ -1,0 +1,1 @@
+{"version":3,"file":"IScreeningQuestionRepository.d.ts","sourceRoot":"","sources":["../../../src/domain/repositories/IScreeningQuestionRepository.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,iBAAiB,EAAE,MAAM,+BAA+B,CAAC;AAEvE,MAAM,WAAW,4BAA4B;IAC3C,aAAa,IAAI,OAAO,CAAC,iBAAiB,EAAE,CAAC,CAAC;IAC9C,QAAQ,CAAC,EAAE,EAAE,MAAM,GAAG,OAAO,CAAC,iBAAiB,GAAG,IAAI,CAAC,CAAC;CACzD"}

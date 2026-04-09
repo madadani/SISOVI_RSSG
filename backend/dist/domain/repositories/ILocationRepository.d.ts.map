@@ -1,0 +1,1 @@
+{"version":3,"file":"ILocationRepository.d.ts","sourceRoot":"","sources":["../../../src/domain/repositories/ILocationRepository.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,sBAAsB,CAAC;AAErD,MAAM,WAAW,mBAAmB;IAClC,aAAa,IAAI,OAAO,CAAC,QAAQ,EAAE,CAAC,CAAC;IACrC,QAAQ,CAAC,EAAE,EAAE,MAAM,GAAG,OAAO,CAAC,QAAQ,GAAG,IAAI,CAAC,CAAC;CAChD"}

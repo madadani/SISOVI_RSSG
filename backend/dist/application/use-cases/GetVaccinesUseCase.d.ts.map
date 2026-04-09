@@ -1,0 +1,1 @@
+{"version":3,"file":"GetVaccinesUseCase.d.ts","sourceRoot":"","sources":["../../../src/application/use-cases/GetVaccinesUseCase.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,kBAAkB,EAAE,MAAM,8CAA8C,CAAC;AACvF,OAAO,KAAK,EAAE,OAAO,EAAE,MAAM,+BAA+B,CAAC;AAE7D,qBAAa,kBAAkB;IACjB,OAAO,CAAC,QAAQ,CAAC,iBAAiB;gBAAjB,iBAAiB,EAAE,kBAAkB;IAE5D,OAAO,IAAI,OAAO,CAAC,OAAO,EAAE,CAAC;CAGpC"}

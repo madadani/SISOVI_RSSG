@@ -1,0 +1,1 @@
+{"version":3,"file":"GetLocationsUseCase.js","sourceRoot":"","sources":["../../../src/application/use-cases/GetLocationsUseCase.ts"],"names":[],"mappings":";;;AAGA,MAAa,mBAAmB;IAC9B,YAA6B,kBAAuC;QAAvC,uBAAkB,GAAlB,kBAAkB,CAAqB;IAAG,CAAC;IAExE,KAAK,CAAC,OAAO;QACX,OAAO,IAAI,CAAC,kBAAkB,CAAC,aAAa,EAAE,CAAC;IACjD,CAAC;CACF;AAND,kDAMC"}

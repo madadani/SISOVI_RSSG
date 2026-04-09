@@ -1,0 +1,1 @@
+{"version":3,"file":"GetRegistrationStatusUseCase.d.ts","sourceRoot":"","sources":["../../../src/application/use-cases/GetRegistrationStatusUseCase.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,uBAAuB,EAAE,MAAM,mDAAmD,CAAC;AAEjG,qBAAa,4BAA4B;IAC3B,OAAO,CAAC,QAAQ,CAAC,sBAAsB;gBAAtB,sBAAsB,EAAE,uBAAuB;IAEtE,OAAO,CAAC,WAAW,EAAE,MAAM;CAKlC"}

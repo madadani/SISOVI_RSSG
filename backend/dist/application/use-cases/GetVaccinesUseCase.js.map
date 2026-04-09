@@ -1,0 +1,1 @@
+{"version":3,"file":"GetVaccinesUseCase.js","sourceRoot":"","sources":["../../../src/application/use-cases/GetVaccinesUseCase.ts"],"names":[],"mappings":";;;AAGA,MAAa,kBAAkB;IAC7B,YAA6B,iBAAqC;QAArC,sBAAiB,GAAjB,iBAAiB,CAAoB;IAAG,CAAC;IAEtE,KAAK,CAAC,OAAO;QACX,OAAO,IAAI,CAAC,iBAAiB,CAAC,aAAa,EAAE,CAAC;IAChD,CAAC;CACF;AAND,gDAMC"}
