@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PASIEN
+  PETUGAS
+  ADMIN
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum RegistrationStatus {
+  WAITING
+  CALLED
+  COMPLETED
+  CANCELLED
+}
+
+enum ScreeningResult {
+  PASSED
+  NEEDS_EVALUATION
+  FAILED
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  role          Role     @default(PASIEN)
+  password_hash String
+  createdAt     DateTime @default(now())
+}
+
+model Patient {
+  id            String   @id @default(uuid())
+  nik           String   @unique
+  name          String
+  birthdate     DateTime
+  gender        String
+  phone         String
+  address       String?
+  no_rm         String?
+  
+  registrations Registration[]
+  certificates  Certificate[]
+}
+
+model Vaccine {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Float    @default(0)
+  stock       Int      @default(0)
+  isActive    Boolean  @default(true)
+
+  certificates Certificate[]
+}
+
+model Location {
+  id          String   @id @default(uuid())
+  name        String
+  floor       String?
+  isActive    Boolean  @default(true)
+
+  registrations Registration[]
+  slots         Slot[]
+}
+
+model Registration {
+  id               String   @id @default(uuid())
+  patient          Patient  @relation(fields: [patientId], references: [id])
+  patientId        String
+  vaccineIds       String[] // Stored as array of IDs for simplicity since multi-select
+  location         Location @relation(fields: [locationId], references: [id])
+  locationId       String
+  scheduleDate     DateTime
+  scheduleTime     String
+  queueNumber      String?  @unique
+  status           RegistrationStatus @default(WAITING)
+  screeningResult  ScreeningResult?
+  
+  // New travel fields
+  passportNumber     String?
+  namePassport1      String?
+  namePassport4      String?
+  destinationCountry String?
+  serviceType        String?
+  departureDate      DateTime?
+  
+  createdAt        DateTime @default(now())
+
+  answers          ScreeningAnswer[]
+  documents        Document[]
+  notifications    Notification[]
+}
+
+model ScreeningQuestion {
+  id           String   @id @default(uuid())
+  questionText String
+  category     String?
+  isActive     Boolean  @default(true)
+  
+  answers      ScreeningAnswer[]
+}
+
+model ScreeningAnswer {
+  id             String            @id @default(uuid())
+  registration   Registration      @relation(fields: [registrationId], references: [id])
+  registrationId String
+  question       ScreeningQuestion @relation(fields: [questionId], references: [id])
+  questionId     String
+  answer         Boolean
+}
+
+model Document {
+  id             String             @id @default(uuid())
+  registration   Registration       @relation(fields: [registrationId], references: [id])
+  registrationId String
+  type           String             // e.g. "KTP", "BUKU_VAKSIN", "SURAT_DOKTER"
+  filePath       String
+  status         VerificationStatus @default(PENDING)
+  verifiedBy     String?            // User ID of PETUGAS/ADMIN
+  verifiedAt     DateTime?
+  notes          String?
+}
+
+model Certificate {
+  id          String   @id @default(uuid())
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  patientId   String
+  vaccine     Vaccine  @relation(fields: [vaccineId], references: [id])
+  vaccineId   String
+  issuedDate  DateTime @default(now())
+  batchNumber String
+  doctorName  String
+  qrCode      String?
+  filePath    String
+}
+
+model Notification {
+  id             String       @id @default(uuid())
+  registration   Registration @relation(fields: [registrationId], references: [id])
+  registrationId String
+  type           String
+  channel        String       // "WHATSAPP", "SMS"
+  message        String
+  sentAt         DateTime?
+  status         String
+}
+
+model Slot {
+  id           String   @id @default(uuid())
+  date         DateTime
+  location     Location @relation(fields: [locationId], references: [id])
+  locationId   String
+  maxQuota     Int      @default(0)
+  currentQuota Int      @default(0)
+}
