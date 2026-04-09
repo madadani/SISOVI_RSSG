@@ -31,10 +31,10 @@ const Sidebar = () => {
       )}
 
       <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 shadow-lg md:shadow-none transform transition-all duration-300 ease-in-out md:translate-x-0 md:static md:w-64 md:h-screen md:flex-shrink-0 flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex items-center justify-between p-6 border-b border-gray-50 dark:border-slate-800 bg-white dark:bg-slate-900 flex-shrink-0">
-          <h2 className="text-xl font-black text-rs-dark-blue dark:text-blue-400 font-sans tracking-tight">Panel Admin</h2>
+        <div className="flex items-center justify-between p-5 border-b border-gray-50 dark:border-slate-800 bg-white dark:bg-slate-900 flex-shrink-0">
+          <h2 className="text-lg font-black text-rs-dark-blue dark:text-blue-400 font-sans tracking-tight">Panel Admin</h2>
           <button onClick={() => setIsOpen(false)} className="md:hidden text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
 
@@ -46,14 +46,14 @@ const Sidebar = () => {
               end={item.path === '/dashboard'}
               onClick={() => setIsOpen(false)}
               className={({ isActive }) => 
-                `flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
+                `flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-sm transition-all ${
                   isActive 
                     ? 'bg-primary dark:bg-blue-600 text-white shadow-md shadow-primary/20 dark:shadow-blue-900/30 ring-1 ring-primary/50 dark:ring-blue-500/50' 
                     : 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800/80 hover:text-rs-dark-blue dark:hover:text-blue-300'
                 }`
               }
             >
-              <item.icon size={20} strokeWidth={2.5} />
+              <item.icon size={18} strokeWidth={2.5} />
               {item.name}
             </NavLink>
           ))}

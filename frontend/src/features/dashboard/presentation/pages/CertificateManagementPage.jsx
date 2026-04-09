@@ -56,15 +56,15 @@ const CertificateManagementPage = () => {
             <ArrowLeft size={24} className="text-gray-600 dark:text-gray-300" />
           </button>
           <div>
-            <h2 className="text-3xl font-black text-rs-dark-blue dark:text-blue-400 flex items-center gap-3">
-              <FileText size={32} className="text-rs-light-blue" /> Penerbitan Sertifikat
+            <h2 className="text-2xl font-black text-rs-dark-blue dark:text-blue-400 flex items-center gap-3">
+              <ShieldCheck size={26} className="text-primary" /> Sertifikat Internasional
             </h2>
-            <p className="text-gray-500 dark:text-slate-400">Verifikasi tanda tangan digital dan cetak sertifikat (Buku Kuning / ICV).</p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">Verifikasi, cetak, dan pantau validitas sertifikat kesehatan.</p>
           </div>
         </div>
         
-        <button className="px-5 py-3 bg-rs-light-blue text-white font-bold rounded-2xl shadow-lg shadow-rs-light-blue/30 flex items-center justify-center gap-2 hover:translate-y-[-2px] transition-all">
-          <Printer size={20} /> Cetak Masal
+        <button className="px-4 py-2.5 text-sm bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 hover:translate-y-[-2px] transition-all">
+          <Download size={18} /> Export Laporan
         </button>
       </div>
 
@@ -104,7 +104,7 @@ const CertificateManagementPage = () => {
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               placeholder="Cari ID Sertifikat atau Nama Pasien..." 
-              className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-rs-light-blue/40 outline-none font-medium text-gray-800 dark:text-slate-200 transition-all shadow-sm" 
+              className="w-full pl-12 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-rs-light-blue/40 outline-none font-medium text-gray-800 dark:text-slate-200 transition-all shadow-sm" 
             />
           </div>
         </div>
@@ -112,44 +112,44 @@ const CertificateManagementPage = () => {
         <div className="overflow-x-auto min-h-[400px]">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-slate-400 text-sm font-bold border-b border-gray-100 dark:border-slate-800">
-                <th className="py-4 px-6 uppercase tracking-wider">ID Sertifikat</th>
-                <th className="py-4 px-6 uppercase tracking-wider">Nama Pasien</th>
-                <th className="py-4 px-6 uppercase tracking-wider">Tindakan Vaksin</th>
-                <th className="py-4 px-6 uppercase tracking-wider">Tgl Terbit</th>
-                <th className="py-4 px-6 uppercase tracking-wider">Status Dokumen</th>
-                <th className="py-4 px-6 uppercase tracking-wider text-right">Aksi</th>
+              <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-slate-400 font-bold border-b border-gray-100 dark:border-slate-800">
+                <th className="py-3 px-5 tracking-wider text-xs uppercase">No. Dokumen</th>
+                <th className="py-3 px-5 tracking-wider text-xs uppercase">Identitas Pasien</th>
+                <th className="py-3 px-5 tracking-wider text-xs uppercase">Jenis Vaksin</th>
+                <th className="py-3 px-5 tracking-wider text-xs uppercase">Tgl Rilis</th>
+                <th className="py-3 px-5 tracking-wider text-xs uppercase">Status</th>
+                <th className="py-3 px-5 tracking-wider text-xs uppercase text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-slate-800/50">
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="py-12 text-center">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
-                    <p className="mt-4 text-gray-500 dark:text-slate-400 font-medium">Memuat data dari server...</p>
+                  <td colSpan="6" className="py-10 text-center">
+                    <Loader2 className="w-6 h-6 animate-spin mx-auto text-primary" />
+                    <p className="mt-3 text-sm text-gray-500 dark:text-slate-400 font-medium">Memuat data dari server...</p>
                   </td>
                 </tr>
               ) : filteredCerts.length > 0 ? (
                 filteredCerts.map((cert) => (
                   <tr key={cert.id} className="hover:bg-blue-50/30 dark:hover:bg-slate-800/50 transition-colors group">
-                    <td className="py-4 px-6 font-bold text-gray-800 dark:text-slate-200 whitespace-nowrap">
+                    <td className="py-3 px-5 font-bold text-gray-800 dark:text-slate-200 whitespace-nowrap text-sm">
                       {cert.id}
                       {cert.valid && <CheckCircle2 size={14} className="inline ml-2 text-green-500" title="Valid Secara Kriptografi" />}
                       {!cert.valid && <AlertTriangle size={14} className="inline ml-2 text-yellow-500" title="Belum Tervalidasi" />}
                     </td>
-                    <td className="py-4 px-6 font-medium text-gray-700 dark:text-slate-300">
+                    <td className="py-3 px-5 font-medium text-gray-700 dark:text-slate-300 text-sm">
                       {cert.ptName}
                     </td>
-                    <td className="py-4 px-6 text-gray-600 dark:text-slate-400">
+                    <td className="py-3 px-5 text-gray-600 dark:text-slate-400 text-sm">
                       {cert.vaxType}
                     </td>
-                    <td className="py-4 px-6 text-gray-600 dark:text-slate-400">
+                    <td className="py-3 px-5 text-gray-600 dark:text-slate-400 text-sm">
                       {cert.date}
                     </td>
-                    <td className="py-4 px-6">
+                    <td className="py-3 px-5">
                       {getStatusBadge(cert.status)}
                     </td>
-                    <td className="py-4 px-6 text-right">
+                    <td className="py-3 px-5 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button 
                           disabled={cert.status === 'VERIFIKASI'}
@@ -160,9 +160,9 @@ const CertificateManagementPage = () => {
                         </button>
                         <button 
                           disabled={cert.status === 'VERIFIKASI'}
-                          className="px-3 py-1.5 bg-rs-light-blue text-white text-xs font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                          className="px-3 py-1.5 bg-rs-light-blue text-white text-[10px] uppercase font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
                         >
-                          <Printer size={14} /> Cetak
+                          <Printer size={12} /> Cetak
                         </button>
                       </div>
                     </td>
@@ -170,7 +170,7 @@ const CertificateManagementPage = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="py-12 text-center text-gray-500 dark:text-slate-400 font-medium">
+                  <td colSpan="6" className="py-12 text-center text-sm text-gray-500 dark:text-slate-400 font-medium">
                     Tidak ada sertifikat yang cocok dengan pencarian Anda.
                   </td>
                 </tr>

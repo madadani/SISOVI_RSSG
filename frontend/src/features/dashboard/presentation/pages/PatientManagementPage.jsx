@@ -168,18 +168,18 @@ const PatientManagementPage = () => {
             <ArrowLeft size={24} className="text-gray-600 dark:text-gray-300" />
           </button>
           <div>
-            <h2 className="text-3xl font-black text-rs-dark-blue dark:text-blue-400 flex items-center gap-3">
-              <Users size={32} className="text-primary" /> Manajemen Pasien
+            <h2 className="text-2xl font-black text-rs-dark-blue dark:text-blue-400 flex items-center gap-3">
+              <Users size={26} className="text-primary" /> Manajemen Pasien
             </h2>
-            <p className="text-gray-500 dark:text-slate-400">Kelola dan pantau seluruh data pasien operasional.</p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">Kelola dan pantau seluruh data pasien operasional.</p>
           </div>
         </div>
         
         <button 
           onClick={handleExportExcel}
-          className="px-5 py-3 bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 hover:translate-y-[-2px] transition-all"
+          className="px-4 py-2.5 text-sm bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 hover:translate-y-[-2px] transition-all"
         >
-          <Download size={20} /> Export Excel
+          <Download size={18} /> Export Excel
         </button>
       </div>
 
@@ -204,49 +204,49 @@ const PatientManagementPage = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-slate-400 text-sm font-bold border-b border-gray-100 dark:border-slate-800">
-                <th className="py-4 px-6 uppercase tracking-wider">Tgl Kunjungan</th>
-                <th className="py-4 px-6 uppercase tracking-wider">Identitas Pasien</th>
-                <th className="py-4 px-6 uppercase tracking-wider">Jenis Kelamin</th>
-                <th className="py-4 px-6 uppercase tracking-wider">Tindakan Terakhir</th>
-                <th className="py-4 px-6 uppercase tracking-wider">Status</th>
-                <th className="py-4 px-6 uppercase tracking-wider text-right">Aksi</th>
+                <th className="py-3 px-5 uppercase tracking-wider text-xs">Tgl Kunjungan</th>
+                <th className="py-3 px-5 uppercase tracking-wider text-xs">Identitas Pasien</th>
+                <th className="py-3 px-5 uppercase tracking-wider text-xs">Jenis Kelamin</th>
+                <th className="py-3 px-5 uppercase tracking-wider text-xs">Tindakan Terakhir</th>
+                <th className="py-3 px-5 uppercase tracking-wider text-xs">Status</th>
+                <th className="py-3 px-5 uppercase tracking-wider text-right text-xs">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-slate-800/50">
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="py-12 text-center">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
-                    <p className="mt-4 text-gray-500 dark:text-slate-400 font-medium">Memuat data dari server...</p>
+                  <td colSpan="6" className="py-10 text-center">
+                    <Loader2 className="w-6 h-6 animate-spin mx-auto text-primary" />
+                    <p className="mt-3 text-sm text-gray-500 dark:text-slate-400 font-medium">Memuat data dari server...</p>
                   </td>
                 </tr>
               ) : filteredPatients.length > 0 ? (
                 filteredPatients.map((patient) => (
                   <tr key={patient.id} className="hover:bg-blue-50/30 dark:hover:bg-slate-800/50 transition-colors group">
-                    <td className="py-4 px-6 whitespace-nowrap text-gray-600 dark:text-slate-300 font-medium">
+                    <td className="py-3 px-5 whitespace-nowrap text-sm text-gray-600 dark:text-slate-300 font-medium">
                       {patient.date}
                     </td>
-                    <td className="py-4 px-6">
-                      <div className="font-bold text-gray-800 dark:text-slate-200">{patient.name}</div>
-                      <div className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                    <td className="py-3 px-5">
+                      <div className="font-bold text-sm text-gray-800 dark:text-slate-200">{patient.name}</div>
+                      <div className="text-[11px] text-gray-500 dark:text-slate-400 mt-0.5">
                         <span className="font-medium">NIK:</span> {patient.nik} <br/>
                         <span className="font-medium">Passport:</span> {patient.passport}
                       </div>
                     </td>
-                    <td className="py-4 px-6 text-gray-600 dark:text-slate-300">
+                    <td className="py-3 px-5 text-sm text-gray-600 dark:text-slate-300">
                       {patient.gender === 'L' ? 'Laki-Laki' : 'Perempuan'}
                     </td>
-                    <td className="py-4 px-6">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
+                    <td className="py-3 px-5">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
                         {patient.latestVax}
                       </span>
                     </td>
-                    <td className="py-4 px-6">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(patient.status)}`}>
+                    <td className="py-3 px-5">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold ${getStatusColor(patient.status)}`}>
                         {patient.status}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-right">
+                    <td className="py-3 px-5 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button 
                           onClick={() => handleViewRecords(patient.id)}

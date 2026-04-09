@@ -32,8 +32,8 @@ const StatCard = ({ title, value, subValue, icon: Icon, colorClass, loading, lin
     <Link to={link || '#'} className="bg-white p-6 rounded-3xl shadow-lg shadow-gray-100/50 border border-gray-100/80 group hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 relative overflow-hidden block">
       <div className={`absolute -right-10 -top-10 w-32 h-32 bg-gradient-to-br ${getGradient(colorClass)} opacity-[0.03] rounded-full group-hover:scale-150 transition-transform duration-700`}></div>
       <div className="flex justify-between items-start mb-6">
-        <div className={`p-4 rounded-2xl bg-gradient-to-br ${getGradient(colorClass)} text-white shadow-md group-hover:scale-110 transition-transform duration-300`}>
-          <Icon size={24} strokeWidth={2.5} />
+        <div className={`p-3 rounded-2xl bg-gradient-to-br ${getGradient(colorClass)} text-white shadow-md group-hover:scale-110 transition-transform duration-300`}>
+          <Icon size={20} strokeWidth={2.5} />
         </div>
         <button className="text-gray-300 hover:text-gray-600 transition-colors p-1 relative z-10">
           <MoreVertical size={20} />
@@ -42,9 +42,9 @@ const StatCard = ({ title, value, subValue, icon: Icon, colorClass, loading, lin
       <div className="relative z-10">
         <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">{title}</p>
         {loading ? (
-          <div className="h-10 w-24 bg-gray-100 animate-pulse rounded-lg mt-1"></div>
+          <div className="h-8 w-24 bg-gray-100 animate-pulse rounded-lg mt-1"></div>
         ) : (
-          <h3 className="text-4xl font-black text-gray-800 tracking-tight">{value}</h3>
+          <h3 className="text-3xl font-black text-gray-800 tracking-tight">{value}</h3>
         )}
         <div className="flex items-center gap-2 mt-3">
           <span className="flex items-center gap-0.5 text-xs font-bold bg-green-50 text-green-600 px-2 py-1 rounded-md">
@@ -96,23 +96,23 @@ const DashboardPage = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-3xl font-black text-rs-dark-blue dark:text-blue-400">Dashboard Admin</h2>
-            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 dark:bg-green-900/30 text-rs-green dark:text-green-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-green-100 dark:border-green-800">
+            <h2 className="text-2xl font-black text-rs-dark-blue dark:text-blue-400">Dashboard Admin</h2>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 dark:bg-green-900/30 text-rs-green dark:text-green-400 text-[9px] font-black uppercase tracking-widest rounded-full border border-green-100 dark:border-green-800">
               <span className="w-1.5 h-1.5 bg-rs-green dark:bg-green-400 rounded-full animate-pulse"></span> live
             </div>
           </div>
           <p className="text-gray-500 dark:text-slate-400">Terakhir diperbarui: {lastRefreshed.toLocaleTimeString('id-ID')} WIB</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <button 
             onClick={fetchStats}
-            className="p-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-400 hover:text-primary dark:text-gray-400 transition shadow-sm"
+            className="p-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-400 hover:text-primary dark:text-gray-400 transition shadow-sm"
             title="Refresh Manual"
           >
-            <RefreshCcw size={20} className={loading ? 'animate-spin' : ''} />
+            <RefreshCcw size={18} className={loading ? 'animate-spin' : ''} />
           </button>
-          <button className="px-5 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl font-bold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition shadow-sm flex items-center gap-2">
-            <Calendar size={18} /> {formatDate(new Date(), 'dd MMMM yyyy')}
+          <button className="px-4 py-2 text-sm bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl font-bold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition shadow-sm flex items-center gap-2">
+            <Calendar size={16} /> {formatDate(new Date(), 'dd MMMM yyyy')}
           </button>
         </div>
       </div>

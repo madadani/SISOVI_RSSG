@@ -124,75 +124,54 @@ const QueueManagementPage = () => {
           <ArrowLeft size={24} className="text-gray-600 dark:text-gray-300" />
         </button>
         <div>
-          <h2 className="text-3xl font-black text-rs-dark-blue dark:text-blue-400 flex items-center gap-3">
-            <Clock size={32} className="text-rs-gold" /> Kontrol Antrian Harian
+          <h2 className="text-2xl font-black text-rs-dark-blue dark:text-blue-400 flex items-center gap-3">
+            <Clock size={26} className="text-primary" /> Antrian Harian
           </h2>
-          <p className="text-gray-500 dark:text-slate-400">Panggil, tunda, atau selesaikan antrian pasien yang sedang berjalan.</p>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Atur pemanggilan dan status antrian pasien hari ini secara realtime.</p>
         </div>
       </div>
 
       {/* Active Call Card */}
-      <div className="bg-rs-dark-blue dark:bg-slate-900 rounded-3xl p-8 mb-8 text-white flex flex-col lg:flex-row justify-between items-center gap-8 shadow-xl relative overflow-hidden border border-transparent dark:border-slate-800">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -ml-40 -mb-40 pointer-events-none"></div>
-        
-        <div className="flex-1 relative z-10 w-full text-center lg:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full mb-4">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-            <span className="text-xs font-black uppercase tracking-widest text-white/80">Sedang Dilayani</span>
+      <div className="bg-white dark:bg-slate-900 rounded-3xl mb-8 shadow-sm border border-gray-100 dark:border-slate-800 relative overflow-hidden">
+        <div className="p-8">
+          <div className="flex items-center justify-between mb-4">
+             <span className="text-sm font-bold text-gray-500 dark:text-slate-400 tracking-widest uppercase">Sedang Dipanggil</span>
+             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-full text-xs font-bold border border-green-200 dark:border-green-800 animate-pulse">
+               <Play size={12} fill="currentColor" /> {activePatient?.time || '--:--'}
+             </span>
           </div>
-          <h3 className="text-5xl md:text-7xl font-black tracking-tighter text-white drop-shadow-md">{activePatient ? activePatient.id : '---'}</h3>
-          <div className="mt-4 text-xl font-bold text-white/90">
-            Atas Nama: <span className="text-rs-gold dark:text-yellow-400 text-2xl">{activePatient ? activePatient.name : 'Belum Ada Antrian'}</span>
-          </div>
-          <div className="mt-2 text-lg text-white/70 font-medium">
-            Tindakan: {activePatient ? activePatient.vax : '-'}
-          </div>
-        </div>
-
-        <div className="flex flex-wrap justify-center lg:justify-end gap-4 relative z-10 w-full lg:w-auto">
-          <button 
-            onClick={() => handleSkipOrMarkAsDone('DONE')}
-            className="flex flex-col items-center justify-center p-4 w-28 h-28 bg-green-500 hover:bg-green-400 rounded-2xl text-white transition-all shadow-lg shadow-green-500/30 active:scale-95 group"
-            title="Tandai Selesai"
-          >
-            <CheckCircle size={36} className="mb-2 group-hover:scale-110 transition-transform" />
-            <span className="text-xs font-bold uppercase tracking-wider">Selesai</span>
-          </button>
           
-          <button 
-             className="flex flex-col items-center justify-center p-4 w-28 h-28 bg-white hover:bg-rs-gold rounded-2xl text-rs-dark-blue transition-all shadow-lg active:scale-95 group"
-             title="Panggil Ulang Suara"
-          >
-            <Volume2 size={36} className="mb-2 group-hover:scale-110 transition-transform" />
-            <span className="text-xs font-bold uppercase tracking-wider">Panggil</span>
-          </button>
-
-          <button 
-            onClick={() => handleSkipOrMarkAsDone('SKIPPED')}
-            className="flex flex-col items-center justify-center p-4 w-28 h-28 bg-white/10 border border-white/20 hover:bg-white/20 rounded-2xl text-white transition-all shadow-lg active:scale-95 group"
-            title="Pasien Tidak Hadir"
-          >
-            <UserX size={36} className="mb-2 group-hover:scale-110 transition-transform text-red-300" />
-            <span className="text-xs font-bold uppercase tracking-wider">Lewati</span>
-          </button>
+          <div className="flex items-start gap-4 mb-6">
+            <div className="p-4 bg-primary/10 dark:bg-primary/20 rounded-3xl text-primary dark:text-blue-400">
+               <Volume2 size={32} />
+            </div>
+            <div>
+              <h3 className="text-3xl font-black text-rs-dark-blue dark:text-white tracking-tight mb-2">
+                {activePatient?.name || 'Tidak ada antrian aktif'}
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-4 py-1.5 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 font-bold rounded-xl border border-gray-200 dark:border-slate-700 text-sm">
+                  {activePatient?.id || '---'}
+                </span>
+                <span className="px-4 py-1.5 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 font-bold rounded-xl border border-blue-100 dark:border-blue-800 text-sm">
+                  {activePatient?.vax || '---'}
+                </span>
+              </div>
+            </div>
+          </div>
           
-          <button 
-            onClick={handleNext}
-            disabled={queue.length === 0}
-            className="flex flex-col items-center justify-center p-4 w-28 h-28 bg-primary hover:bg-blue-400 rounded-2xl text-white transition-all shadow-lg shadow-primary/30 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group col-span-2 sm:col-span-1"
-            title="Panggil Antrian Selanjutnya"
-          >
-            <SkipForward size={36} className="mb-2 group-hover:scale-110 transition-transform" />
-            <span className="text-xs font-bold uppercase tracking-wider">Next</span>
-          </button>
+          <div className="flex gap-3">
+            <button onClick={() => handleSkipOrMarkAsDone('DONE')} className="flex-1 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-all">Selesai</button>
+            <button onClick={() => handleSkipOrMarkAsDone('SKIPPED')} className="flex-1 py-3 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 font-bold rounded-xl transition-all">Lewati</button>
+            <button onClick={handleNext} className="flex-1 py-3 bg-primary hover:bg-blue-600 text-white font-bold rounded-xl transition-all">Next</button>
+          </div>
         </div>
       </div>
 
       {/* Queue List Table */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
         <div className="p-6 border-b border-gray-50 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50/50 dark:bg-slate-800/30">
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white">Daftar Tunggu Selanjutnya</h3>
+          <h3 className="text-xl font-bold text-gray-800 dark:text-white">Daftar Tunggu</h3>
           <div className="relative w-full sm:w-auto min-w-[250px]">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input 
@@ -208,41 +187,53 @@ const QueueManagementPage = () => {
         <div className="overflow-x-auto min-h-[300px]">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-slate-400 text-sm font-bold border-b border-gray-100 dark:border-slate-800">
-                <th className="py-4 px-6 uppercase tracking-wider">No. Antrian</th>
-                <th className="py-4 px-6 uppercase tracking-wider">Nama Pasien</th>
-                <th className="py-4 px-6 uppercase tracking-wider">Tindakan</th>
-                <th className="py-4 px-6 uppercase tracking-wider">Estimasi Jam</th>
-                <th className="py-4 px-6 uppercase tracking-wider text-right">Status</th>
+              <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-slate-400 font-bold border-b border-gray-100 dark:border-slate-800">
+                <th className="py-3 px-5 uppercase tracking-wider text-xs">No. Antrian</th>
+                <th className="py-3 px-5 uppercase tracking-wider text-xs">Jadwal</th>
+                <th className="py-3 px-5 uppercase tracking-wider text-xs">Identitas Pasien</th>
+                <th className="py-3 px-5 uppercase tracking-wider text-xs">Layanan</th>
+                <th className="py-3 px-5 uppercase tracking-wider text-xs">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-slate-800/50">
-              {filteredQueue.length > 0 ? (
-                filteredQueue.map((q) => (
-                  <tr key={q.id} className="hover:bg-blue-50/30 dark:hover:bg-slate-800/50 transition-colors">
-                    <td className="py-4 px-6 whitespace-nowrap text-gray-800 dark:text-slate-200 font-bold text-lg">
-                      {q.id}
+              {loading ? (
+                <tr>
+                  <td colSpan="5" className="py-10 text-center">
+                    <Loader2 className="w-6 h-6 animate-spin mx-auto text-primary" />
+                    <p className="mt-3 text-sm text-gray-500 dark:text-slate-400 font-medium">Memuat data dari server...</p>
+                  </td>
+                </tr>
+              ) : filteredQueue.length === 0 ? (
+                 <tr>
+                  <td colSpan="5" className="py-12 text-center text-gray-500 dark:text-slate-400 font-medium text-sm">
+                    Tidak ada antrian yang terdaftar.
+                  </td>
+                </tr>
+              ) : (
+                filteredQueue.map((item, index) => (
+                  <tr key={item.id} className="hover:bg-blue-50/50 dark:hover:bg-slate-800/50 transition-colors group">
+                    <td className="py-3 px-5">
+                      <div className="flex items-center gap-3">
+                        <span className="w-6 h-6 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 flex items-center justify-center text-xs font-bold">
+                          {index + 1}
+                        </span>
+                        <span className="font-bold text-gray-800 dark:text-slate-200 text-sm">{item.id}</span>
+                      </div>
                     </td>
-                    <td className="py-4 px-6 font-bold text-gray-700 dark:text-slate-300">
-                      {q.name}
+                    <td className="py-3 px-5 font-bold text-rs-dark-blue dark:text-blue-400 text-sm">
+                      {item.time}
                     </td>
-                    <td className="py-4 px-6 text-gray-600 dark:text-slate-400 font-medium">
-                      {q.vax}
+                    <td className="py-3 px-5 text-gray-800 dark:text-slate-200 font-bold text-sm">
+                      {item.name}
                     </td>
-                    <td className="py-4 px-6 text-gray-600 dark:text-slate-400 font-medium flex items-center gap-2">
-                      <Clock size={16} className="text-primary"/> {q.time} WIB
+                    <td className="py-3 px-5 text-gray-600 dark:text-slate-300 text-sm">
+                      {item.vax}
                     </td>
-                    <td className="py-4 px-6 text-right">
-                      {getStatusBadge(q.status)}
+                    <td className="py-3 px-5">
+                      {getStatusBadge(item.status)}
                     </td>
                   </tr>
                 ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="py-12 text-center">
-                    <p className="text-gray-500 dark:text-slate-400 font-medium">Tidak ada daftar tunggu yang ditemukan.</p>
-                  </td>
-                </tr>
               )}
             </tbody>
           </table>
