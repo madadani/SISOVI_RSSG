@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8002';
 
 export const API_ENDPOINTS = {
   HEALTH: `${API_BASE_URL}/health`,

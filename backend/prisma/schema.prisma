@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -50,7 +50,7 @@ model Patient {
   phone         String
   address       String?
   no_rm         String?
-  
+
   registrations Registration[]
   certificates  Certificate[]
 }
@@ -80,7 +80,7 @@ model Registration {
   id               String   @id @default(uuid())
   patient          Patient  @relation(fields: [patientId], references: [id])
   patientId        String
-  vaccineIds       String[] // Stored as array of IDs for simplicity since multi-select
+  vaccineIds       Json     // MySQL does not support scalar array; store selected vaccine IDs as JSON array
   location         Location @relation(fields: [locationId], references: [id])
   locationId       String
   scheduleDate     DateTime
@@ -88,7 +88,7 @@ model Registration {
   queueNumber      String?  @unique
   status           RegistrationStatus @default(WAITING)
   screeningResult  ScreeningResult?
-  
+
   // New travel fields
   passportNumber     String?
   namePassport1      String?
@@ -96,7 +96,7 @@ model Registration {
   destinationCountry String?
   serviceType        String?
   departureDate      DateTime?
-  
+
   createdAt        DateTime @default(now())
 
   answers          ScreeningAnswer[]
@@ -109,7 +109,7 @@ model ScreeningQuestion {
   questionText String
   category     String?
   isActive     Boolean  @default(true)
-  
+
   answers      ScreeningAnswer[]
 }
 
