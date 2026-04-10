@@ -12,7 +12,7 @@ RUN npm install --no-audit --no-fund
 
 COPY . .
 
-ARG VITE_API_URL=http://localhost:8002/api
+ARG VITE_API_URL=http://192.168.100.9:8002/api
 ENV VITE_API_URL=${VITE_API_URL}
 
 RUN npm run build

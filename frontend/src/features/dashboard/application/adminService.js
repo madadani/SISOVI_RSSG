@@ -5,9 +5,9 @@ export const adminService = {
     const response = await axiosInstance.get('/api/vaccines');
     return response.data;
   },
-  
+
   async getDashboardStats() {
-    const response = await axiosInstance.get('/api/dashboard');
+    const response = await axiosInstance.get('/dashboard');
     return response.data;
   },
 

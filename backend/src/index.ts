@@ -5,5 +5,5 @@ const app = createApp();
 
 app.listen(env.PORT, () => {
   console.log(`🚀 Server running on port ${env.PORT}`);
-  console.log(`📋 Health check: http://localhost:${env.PORT}/health`);
+  console.log(`📋 Health check: http://192.168.100.9:${env.PORT}/health`);
 });
