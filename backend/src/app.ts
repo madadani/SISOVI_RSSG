@@ -19,7 +19,7 @@ export function createApp(): express.Application {
   app.use(express.static(frontendPath));
 
   // Wildcard to handle client-side routing (SPAs)
-  app.get('*', (req, res, next) => {
+  app.get(/.*/, (req, res, next) => {
     // If it's an API call, let it pass (though /api should catch it)
     if (req.url.startsWith('/api')) return next();
     res.sendFile(path.join(frontendPath, 'index.html'));

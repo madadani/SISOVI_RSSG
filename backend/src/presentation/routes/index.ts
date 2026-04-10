@@ -73,20 +73,20 @@ export function createRouter(): Router {
 
   // ── Mount Routes ──────────────────────────────────────────
   router.use(createHealthRoutes(healthCtrl));
-  router.use('/api/locations', createLocationRoutes(locationCtrl));
-  router.use('/api/vaccines', createVaccineRoutes(vaccineCtrl));
-  router.use('/api/questions', createScreeningRoutes(questionCtrl));
-  router.use('/api/register', createRegistrationRoutes(registrationCtrl));
-  router.get('/api/registration/status', (req, res) => registrationCtrl.getStatus(req, res));
-  router.get('/api/dashboard', (req, res) => dashboardCtrl.getStats(req, res));
-  router.get('/api/certificates', (req, res) => certificateCtrl.getByPatient(req, res));
+  router.use('/locations', createLocationRoutes(locationCtrl));
+  router.use('/vaccines', createVaccineRoutes(vaccineCtrl));
+  router.use('/questions', createScreeningRoutes(questionCtrl));
+  router.use('/register', createRegistrationRoutes(registrationCtrl));
+  router.get('/registration/status', (req, res) => registrationCtrl.getStatus(req, res));
+  router.get('/dashboard', (req, res) => dashboardCtrl.getStats(req, res));
+  router.get('/certificates', (req, res) => certificateCtrl.getByPatient(req, res));
   
   // Admin Routes
-  router.get('/api/admin/patients', (req, res) => adminCtrl.getPatients(req, res));
-  router.delete('/api/admin/patients/:id', (req, res) => adminCtrl.deletePatient(req, res));
-  router.get('/api/admin/queues', (req, res) => adminCtrl.getQueues(req, res));
-  router.put('/api/admin/queues/:queueNumber/status', (req, res) => adminCtrl.setQueueStatus(req, res));
-  router.get('/api/admin/certificates', (req, res) => adminCtrl.getCertificates(req, res));
+  router.get('/admin/patients', (req, res) => adminCtrl.getPatients(req, res));
+  router.delete('/admin/patients/:id', (req, res) => adminCtrl.deletePatient(req, res));
+  router.get('/admin/queues', (req, res) => adminCtrl.getQueues(req, res));
+  router.put('/admin/queues/:queueNumber/status', (req, res) => adminCtrl.setQueueStatus(req, res));
+  router.get('/admin/certificates', (req, res) => adminCtrl.getCertificates(req, res));
 
   return router;
 }
