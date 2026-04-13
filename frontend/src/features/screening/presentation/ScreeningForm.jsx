@@ -157,7 +157,7 @@ const ScreeningForm = () => {
       )}
 
       <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800 p-6 md:p-8 transition-colors duration-300">
-        {step === 1 && <PatientDataStep formData={formData} updateField={updateField} />}
+        {step === 1 && <PatientDataStep formData={formData} updateField={updateField} availableVaccines={availableVaccines} />}
         {step === 2 && (
           <VaccineSelectStep 
             formData={formData} 

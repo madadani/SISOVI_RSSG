@@ -5,6 +5,10 @@ import type { PrismaClient } from '@prisma/client';
 export class PrismaVaccineRepository implements IVaccineRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
+  async findAll(): Promise<Vaccine[]> {
+    return this.prisma.vaccine.findMany();
+  }
+
   async findAllActive(): Promise<Vaccine[]> {
     return this.prisma.vaccine.findMany({
       where: { isActive: true },
@@ -21,6 +25,12 @@ export class PrismaVaccineRepository implements IVaccineRepository {
     return this.prisma.vaccine.update({
       where: { id },
       data,
+    });
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.vaccine.delete({
+      where: { id },
     });
   }
 }

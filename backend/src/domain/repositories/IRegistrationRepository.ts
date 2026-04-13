@@ -29,4 +29,5 @@ export interface IRegistrationRepository {
   countByDate(date: Date): Promise<number>;
   findRecent(limit: number): Promise<RegistrationWithPatient[]>;
   findByQueueNumber(queueNumber: string): Promise<RegistrationWithPatient | null>;
+  countByDateRange(start: Date, end: Date): Promise<number>;
 }

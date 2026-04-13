@@ -2,11 +2,7 @@ import React from 'react';
 import SearchableSelect from '../../../../shared/components/ui/SearchableSelect';
 import { COUNTRIES } from '../../../../core/constants/countries';
 
-const SERVICE_TYPES = [
-  'Meningitis', 'Yellow Fever', 'Polio', 'Influenza', 'Hepatitis B', 'COVID-19', 'Lainnya'
-];
-
-const PatientDataStep = ({ formData, updateField }) => {
+const PatientDataStep = ({ formData, updateField, availableVaccines = [] }) => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="border-b dark:border-slate-800 pb-4 mb-6">
@@ -25,22 +21,28 @@ const PatientDataStep = ({ formData, updateField }) => {
           />
         </div>
         <div className="space-y-1">
-          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">Jenis Pelayanan</label>
+          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">
+            Jenis Pelayanan <span className="text-red-500">*</span>
+          </label>
           <select 
+            required
             value={formData.serviceType || ''}
             onChange={(e) => updateField('serviceType', e.target.value)}
             className="w-full p-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-200 rounded-lg focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all"
           >
             <option value="">-- Pilih Jenis Pelayanan --</option>
-            {SERVICE_TYPES.map(t => <option key={t} value={t} className="dark:bg-slate-800">{t}</option>)}
+            {availableVaccines.map(v => <option key={v.id} value={v.name} className="dark:bg-slate-800">{v.name}</option>)}
           </select>
         </div>
 
         {/* Row 2 */}
         <div className="space-y-1">
-          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">No. Passport</label>
+          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">
+            No. Passport <span className="text-red-500">*</span>
+          </label>
           <input 
             type="text" 
+            required 
             value={formData.passportNumber || ''}
             onChange={(e) => updateField('passportNumber', e.target.value)}
             className="w-full p-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-200 rounded-lg focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500"
@@ -58,9 +60,12 @@ const PatientDataStep = ({ formData, updateField }) => {
 
         {/* Row 3 */}
         <div className="space-y-1">
-          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">Nama (sesuai halaman satu passport)</label>
+          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">
+            Nama (sesuai hal. 1 passport) <span className="text-red-500">*</span>
+          </label>
           <input 
             type="text" 
+            required 
             value={formData.namePassport1 || ''}
             onChange={(e) => updateField('namePassport1', e.target.value)}
             className="w-full p-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-200 rounded-lg focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all"
@@ -78,16 +83,21 @@ const PatientDataStep = ({ formData, updateField }) => {
 
         {/* Row 4 */}
         <div className="space-y-1">
-          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">Tanggal Lahir</label>
+          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">
+            Tanggal Lahir <span className="text-red-500">*</span>
+          </label>
           <input 
             type="date" 
+            required
             value={formData.birthdate || ''}
             onChange={(e) => updateField('birthdate', e.target.value)}
             className="w-full p-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-200 rounded-lg focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all [color-scheme:light] dark:[color-scheme:dark]"
           />
         </div>
         <div className="space-y-1">
-          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300 mb-2">Jenis Kelamin</label>
+          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300 mb-2">
+            Jenis Kelamin <span className="text-red-500">*</span>
+          </label>
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer group">
               <input 
@@ -123,9 +133,12 @@ const PatientDataStep = ({ formData, updateField }) => {
           />
         </div>
         <div className="space-y-1">
-          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">Tanggal Berangkat</label>
+          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">
+            Tanggal Berangkat <span className="text-red-500">*</span>
+          </label>
           <input 
             type="date" 
+            required
             value={formData.departureDate || ''}
             onChange={(e) => updateField('departureDate', e.target.value)}
             className="w-full p-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-200 rounded-lg focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all [color-scheme:light] dark:[color-scheme:dark]"
@@ -134,9 +147,12 @@ const PatientDataStep = ({ formData, updateField }) => {
 
         {/* Row 6 */}
         <div className="space-y-1">
-          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">No. Handphone</label>
+          <label className="block text-sm font-bold text-gray-800 dark:text-slate-300">
+            No. Handphone <span className="text-red-500">*</span>
+          </label>
           <input 
             type="tel" 
+            required
             value={formData.phone || ''}
             onChange={(e) => updateField('phone', e.target.value)}
             className="w-full p-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-200 rounded-lg focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all"

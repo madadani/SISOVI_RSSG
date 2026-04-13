@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
-import { Syringe, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Syringe, Loader2, ChevronDown } from 'lucide-react';
+import { screeningService } from '../../../screening/application/screeningService';
 
 const ScreeningCard = ({ onNavigateScreening }) => {
   const [selectedVaccine, setSelectedVaccine] = useState('');
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const services = [
-    { id: 'Yellow Fever', label: 'Yellow Fever' },
-    { id: 'Meningitis', label: 'Meningitis' },
-    { id: 'Polio', label: 'Polio' }
-  ];
+  useEffect(() => {
+    async function fetchVaccines() {
+      try {
+        const data = await screeningService.getVaccines();
+        setServices(data);
+      } catch (err) {
+        console.error('Failed to fetch vaccines for home', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchVaccines();
+  }, []);
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-[0_15px_40px_-15px_rgba(0,0,0,0.1)] border border-gray-100 dark:border-slate-800 overflow-hidden hover:shadow-[0_20px_50px_-15px_rgba(59,130,246,0.1)] transition-all duration-500">
@@ -22,39 +33,39 @@ const ScreeningCard = ({ onNavigateScreening }) => {
         <p className="text-sm text-slate-500 dark:text-slate-400">Pilih salah satu layanan untuk memulai proses skrining.</p>
       </div>
       
-      <div className="p-6 space-y-3">
-        {services.map((vax) => (
-          <button
-            key={vax.id}
-            onClick={() => setSelectedVaccine(prev => prev === vax.id ? '' : vax.id)}
-            className={`w-full py-4 px-5 rounded-xl font-bold text-lg transition-all duration-300 flex justify-center items-center gap-3 relative overflow-hidden ${
-              selectedVaccine === vax.id
-                ? 'bg-[#00adef] text-white shadow-md scale-[1.01] border-2 border-[#00adef]'
-                : 'bg-white border-2 border-slate-100 text-slate-600 hover:border-[#00adef] hover:text-[#00adef] hover:bg-[#00adef]/5'
-            }`}
-          >
-            {vax.label}
-            {selectedVaccine === vax.id && (
-              <div className="absolute right-4 bg-white/20 p-0.5 rounded-full">
-                <CheckCircle2 size={20} className="text-white" />
-              </div>
-            )}
-          </button>
-        ))}
+      <div className="p-6 space-y-4">
+        {loading ? (
+          <div className="py-6 flex items-center justify-center gap-3">
+            <Loader2 className="w-6 h-6 text-primary animate-spin" />
+            <p className="text-sm text-gray-400 dark:text-slate-500 font-medium">Memuat layanan...</p>
+          </div>
+        ) : (
+          <div className="relative">
+            <select
+              value={selectedVaccine}
+              onChange={(e) => setSelectedVaccine(e.target.value)}
+              className="w-full py-4 px-5 pr-12 rounded-xl font-bold text-lg border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:border-[#00adef] focus:ring-2 focus:ring-[#00adef]/20 outline-none transition-all appearance-none cursor-pointer"
+            >
+              <option value="">-- Pilih Jenis Pelayanan --</option>
+              {services.map((vax) => (
+                <option key={vax.id} value={vax.name} className="dark:bg-slate-800">{vax.name}</option>
+              ))}
+            </select>
+            <ChevronDown size={22} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
+          </div>
+        )}
 
-        <div className="pt-4">
-          <button 
-            disabled={!selectedVaccine}
-            onClick={() => onNavigateScreening(selectedVaccine)}
-            className={`w-full py-4 rounded-xl font-extrabold text-xl transition-all duration-500 flex justify-center items-center gap-2 shadow-lg ${
-              selectedVaccine 
-                ? 'bg-[#007bff] text-white hover:bg-[#0069d9] hover:-translate-y-0.5 transform' 
-                : 'bg-slate-100 text-slate-400 cursor-not-allowed opacity-60'
-            }`}
-          >
-            Lakukan Skrining
-          </button>
-        </div>
+        <button 
+          disabled={!selectedVaccine}
+          onClick={() => onNavigateScreening(selectedVaccine)}
+          className={`w-full py-4 rounded-xl font-extrabold text-xl transition-all duration-500 flex justify-center items-center gap-2 shadow-lg ${
+            selectedVaccine 
+              ? 'bg-[#007bff] text-white hover:bg-[#0069d9] hover:-translate-y-0.5 transform' 
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-60'
+          }`}
+        >
+          Lakukan Skrining
+        </button>
       </div>
     </div>
   );

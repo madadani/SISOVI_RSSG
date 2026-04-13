@@ -9,7 +9,7 @@ export const API_ENDPOINTS = {
 };
 
 export const APP_CONFIG = {
-  APP_NAME: 'SISOV-RSSG',
+  APP_NAME: 'SISOVI-RSSG',
   APP_DESCRIPTION: 'Sistem Informasi Skrining Online Vaksinasi Rumah Sakit Soeratno Gemolong',
   HOSPITAL_NAME: 'RS Soeratno Gemolong',
 };

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Users, Search, Filter, Download, MoreVertical, Edit, FileText, Trash2, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { ArrowLeft, Users, Search, Filter, Download, Edit, FileText, Trash2, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { adminService } from '../../application/adminService';
-import Swal from 'sweetalert2';
+import { createAdminSwal, createAdminToast } from '../../../../core/utils/swal';
 
 const PatientManagementPage = () => {
   const navigate = useNavigate();
@@ -11,32 +11,8 @@ const PatientManagementPage = () => {
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Custom Styled Swal
-  const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    background: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff',
-    color: document.documentElement.classList.contains('dark') ? '#f1f5f9' : '#1e293b',
-    didOpen: (toast) => {
-      toast.addEventListener('mouseenter', Swal.stopTimer)
-      toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-  });
-
-  const customSwal = Swal.mixin({
-    customClass: {
-      popup: 'rounded-3xl border border-gray-100 dark:border-slate-800 shadow-2xl dark:bg-slate-900',
-      title: 'text-2xl font-black text-rs-dark-blue dark:text-white',
-      confirmButton: 'px-6 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30',
-      cancelButton: 'px-6 py-3 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 font-bold rounded-xl'
-    },
-    buttonsStyling: false,
-    background: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff',
-    color: document.documentElement.classList.contains('dark') ? '#f1f5f9' : '#1e293b',
-  });
+  const Toast = createAdminToast({ timer: 3000 });
+  const customSwal = createAdminSwal();
 
   // Fetch real data
   useEffect(() => {
@@ -161,30 +137,34 @@ const PatientManagementPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 animate-in fade-in duration-500">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <div className="flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-            <ArrowLeft size={24} className="text-gray-600 dark:text-gray-300" />
-          </button>
-          <div>
-            <h2 className="text-2xl font-black text-rs-dark-blue dark:text-blue-400 flex items-center gap-3">
-              <Users size={26} className="text-primary" /> Manajemen Pasien
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-slate-400">Kelola dan pantau seluruh data pasien operasional.</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 animate-in fade-in duration-500">
+      <div className="mb-6">
+        <div className="bg-white dark:bg-slate-900 border border-gray-100/80 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-2xl transition-colors">
+                <ArrowLeft size={20} className="text-gray-600 dark:text-slate-300" />
+              </button>
+              <div>
+                <h2 className="text-2xl font-black text-rs-dark-blue dark:text-slate-50 flex items-center gap-3">
+                  <Users size={22} className="text-primary" /> Manajemen Pasien
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-slate-400">Kelola dan pantau seluruh data pasien operasional.</p>
+              </div>
+            </div>
+
+            <button
+              onClick={handleExportExcel}
+              className="px-4 py-2.5 text-sm bg-primary hover:bg-rs-blue-dark text-white font-bold rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 transition-colors"
+            >
+              <Download size={18} /> Export Excel
+            </button>
           </div>
         </div>
-        
-        <button 
-          onClick={handleExportExcel}
-          className="px-4 py-2.5 text-sm bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 hover:translate-y-[-2px] transition-all"
-        >
-          <Download size={18} /> Export Excel
-        </button>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden transition-colors">
-        <div className="p-6 border-b border-gray-50 dark:border-slate-800 flex flex-col md:flex-row justify-between gap-4 bg-gray-50/50 dark:bg-slate-800/20">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100/80 dark:border-slate-800 overflow-hidden transition-colors">
+        <div className="p-6 border-b border-gray-100/70 dark:border-slate-800 flex flex-col md:flex-row justify-between gap-4 bg-gray-50/60 dark:bg-slate-800/30">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
             <input 
@@ -195,7 +175,7 @@ const PatientManagementPage = () => {
               className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-primary/50 outline-none font-medium text-gray-800 dark:text-slate-200 transition-all shadow-sm" 
             />
           </div>
-          <button className="px-5 py-3 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 font-bold rounded-2xl border border-gray-200 dark:border-slate-700 flex items-center justify-center gap-2 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all shadow-sm">
+          <button className="px-5 py-3 bg-white dark:bg-slate-900 text-gray-600 dark:text-slate-300 font-bold rounded-2xl border border-gray-200 dark:border-slate-700 flex items-center justify-center gap-2 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors shadow-sm">
             <Filter size={20} /> Filter Kategori
           </button>
         </div>
@@ -203,13 +183,13 @@ const PatientManagementPage = () => {
         <div className="overflow-x-auto min-h-[400px]">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-slate-400 text-sm font-bold border-b border-gray-100 dark:border-slate-800">
-                <th className="py-3 px-5 uppercase tracking-wider text-xs">Tgl Kunjungan</th>
-                <th className="py-3 px-5 uppercase tracking-wider text-xs">Identitas Pasien</th>
-                <th className="py-3 px-5 uppercase tracking-wider text-xs">Jenis Kelamin</th>
-                <th className="py-3 px-5 uppercase tracking-wider text-xs">Tindakan Terakhir</th>
-                <th className="py-3 px-5 uppercase tracking-wider text-xs">Status</th>
-                <th className="py-3 px-5 uppercase tracking-wider text-right text-xs">Aksi</th>
+              <tr className="bg-gray-50/50 dark:bg-slate-800/50 text-xs font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest border-b border-gray-100/70 dark:border-slate-800">
+                <th className="py-4 px-6">Tgl Kunjungan</th>
+                <th className="py-4 px-6">Identitas Pasien</th>
+                <th className="py-4 px-6">Jenis Kelamin</th>
+                <th className="py-4 px-6">Tindakan Terakhir</th>
+                <th className="py-4 px-6">Status</th>
+                <th className="py-4 px-6 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-slate-800/50">
@@ -222,45 +202,45 @@ const PatientManagementPage = () => {
                 </tr>
               ) : filteredPatients.length > 0 ? (
                 filteredPatients.map((patient) => (
-                  <tr key={patient.id} className="hover:bg-blue-50/30 dark:hover:bg-slate-800/50 transition-colors group">
-                    <td className="py-3 px-5 whitespace-nowrap text-sm text-gray-600 dark:text-slate-300 font-medium">
+                  <tr key={patient.id} className="hover:bg-gray-50/70 dark:hover:bg-slate-800/30 transition-colors group">
+                    <td className="py-4 px-6 whitespace-nowrap text-sm text-gray-600 dark:text-slate-300 font-medium">
                       {patient.date}
                     </td>
-                    <td className="py-3 px-5">
+                    <td className="py-4 px-6">
                       <div className="font-bold text-sm text-gray-800 dark:text-slate-200">{patient.name}</div>
                       <div className="text-[11px] text-gray-500 dark:text-slate-400 mt-0.5">
                         <span className="font-medium">NIK:</span> {patient.nik} <br/>
                         <span className="font-medium">Passport:</span> {patient.passport}
                       </div>
                     </td>
-                    <td className="py-3 px-5 text-sm text-gray-600 dark:text-slate-300">
+                    <td className="py-4 px-6 text-sm text-gray-600 dark:text-slate-300">
                       {patient.gender === 'L' ? 'Laki-Laki' : 'Perempuan'}
                     </td>
-                    <td className="py-3 px-5">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
+                    <td className="py-4 px-6">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-rs-blue/10 dark:bg-rs-blue/15 text-rs-blue border border-rs-blue/20">
                         {patient.latestVax}
                       </span>
                     </td>
-                    <td className="py-3 px-5">
+                    <td className="py-4 px-6">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold ${getStatusColor(patient.status)}`}>
                         {patient.status}
                       </span>
                     </td>
-                    <td className="py-3 px-5 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <td className="py-4 px-6 text-right">
+                      <div className="flex items-center justify-end gap-2">
                         <button 
                           onClick={() => handleViewRecords(patient.id)}
-                          className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors" title="Lihat Rekam Medis">
+                          className="p-2 text-gray-400 hover:text-rs-blue dark:hover:text-rs-blue hover:bg-rs-blue/10 dark:hover:bg-rs-blue/15 rounded-xl transition-colors" title="Lihat Rekam Medis">
                           <FileText size={18} />
                         </button>
                         <button 
                           onClick={() => handleEdit(patient)}
-                          className="p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-colors" title="Edit Data">
+                          className="p-2 text-gray-400 hover:text-rs-green dark:hover:text-rs-green hover:bg-rs-green/10 dark:hover:bg-rs-green/15 rounded-xl transition-colors" title="Edit Data">
                           <Edit size={18} />
                         </button>
                         <button 
                           onClick={() => handleDelete(patient.id, patient.name)}
-                          className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors" title="Hapus Data">
+                          className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-xl transition-colors" title="Hapus Data">
                           <Trash2 size={18} />
                         </button>
                       </div>
@@ -279,14 +259,14 @@ const PatientManagementPage = () => {
         </div>
 
         {/* Pagination */ }
-        <div className="p-4 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between bg-gray-50/50 dark:bg-slate-800/20">
+        <div className="p-4 border-t border-gray-100/70 dark:border-slate-800 flex items-center justify-between bg-gray-50/60 dark:bg-slate-800/30">
           <span className="text-sm text-gray-500 dark:text-slate-400">Menampilkan {filteredPatients.length} entri aktif</span>
           <div className="flex gap-1">
-            <button className="p-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
+            <button className="p-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
               <ChevronLeft size={18} />
             </button>
             <button className="px-4 py-2 rounded-lg bg-primary text-white font-bold text-sm shadow-md">1</button>
-            <button className="p-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
+            <button className="p-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
               <ChevronRight size={18} />
             </button>
           </div>

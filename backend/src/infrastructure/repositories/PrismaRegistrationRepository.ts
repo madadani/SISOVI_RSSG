@@ -80,4 +80,15 @@ export class PrismaRegistrationRepository implements IRegistrationRepository {
     });
     return reg as unknown as RegistrationWithPatient | null;
   }
+
+  async countByDateRange(start: Date, end: Date): Promise<number> {
+    return this.prisma.registration.count({
+      where: {
+        createdAt: {
+          gte: start,
+          lt: end,
+        },
+      },
+    });
+  }
 }

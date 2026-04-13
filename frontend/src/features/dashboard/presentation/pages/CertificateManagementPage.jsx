@@ -49,44 +49,62 @@ const CertificateManagementPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 animate-in fade-in duration-500">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <div className="flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-            <ArrowLeft size={24} className="text-gray-600 dark:text-gray-300" />
-          </button>
-          <div>
-            <h2 className="text-2xl font-black text-rs-dark-blue dark:text-blue-400 flex items-center gap-3">
-              <ShieldCheck size={26} className="text-primary" /> Sertifikat Internasional
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-slate-400">Verifikasi, cetak, dan pantau validitas sertifikat kesehatan.</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 animate-in fade-in duration-500">
+      <div className="mb-6">
+        <div className="bg-white dark:bg-slate-900 border border-gray-100/80 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-2xl transition-colors">
+                <ArrowLeft size={20} className="text-gray-600 dark:text-slate-300" />
+              </button>
+              <div>
+                <h2 className="text-2xl font-black text-rs-dark-blue dark:text-slate-50 flex items-center gap-3">
+                  <ShieldCheck size={22} className="text-primary" /> Sertifikat Internasional
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-slate-400">Verifikasi, cetak, dan pantau validitas sertifikat kesehatan.</p>
+              </div>
+            </div>
+
+            <button className="px-4 py-2.5 text-sm bg-primary hover:bg-rs-blue-dark text-white font-bold rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 transition-colors">
+              <Download size={18} /> Export Laporan
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-6 mb-6">
+        {/* Verification Status Card */}
+        <div className="bg-white dark:bg-slate-900 border border-gray-100/80 dark:border-slate-800 rounded-2xl p-6 shadow-sm relative overflow-hidden">
+          <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gray-900/2 dark:bg-white/5"></div>
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-[11px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest">Verifikasi Dokter</p>
+              <h3 className="text-3xl font-black text-gray-900 dark:text-slate-50 mt-2">24</h3>
+              <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Menunggu verifikasi</p>
+            </div>
+            <div className="h-11 w-11 rounded-2xl flex items-center justify-center ring-1 ring-black/5 dark:ring-white/10 bg-rs-blue/10 dark:bg-rs-blue/15 text-rs-blue">
+              <ShieldCheck size={20} strokeWidth={2.5} />
+            </div>
           </div>
         </div>
         
-        <button className="px-4 py-2.5 text-sm bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 hover:translate-y-[-2px] transition-all">
-          <Download size={18} /> Export Laporan
-        </button>
-      </div>
-
-      <div className="grid lg:grid-cols-3 gap-6 mb-8">
-        {/* Verification Status Card */}
-        <div className="bg-gradient-to-br from-rs-dark-blue to-blue-900 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden group">
-          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors"></div>
-          <ShieldCheck size={40} className="text-blue-300 mb-4" />
-          <h3 className="text-2xl font-black mb-1">24</h3>
-          <p className="text-blue-200 text-sm font-medium">Menunggu Verifikasi Dokter</p>
-        </div>
-        
         {/* Ready to Print Status Card */}
-        <div className="bg-gradient-to-br from-rs-light-blue to-cyan-600 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden group">
-          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors"></div>
-          <FileText size={40} className="text-cyan-200 mb-4" />
-          <h3 className="text-2xl font-black mb-1">12</h3>
-          <p className="text-cyan-100 text-sm font-medium">Sertifikat Siap Cetak Pagi Ini</p>
+        <div className="bg-white dark:bg-slate-900 border border-gray-100/80 dark:border-slate-800 rounded-2xl p-6 shadow-sm relative overflow-hidden">
+          <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gray-900/2 dark:bg-white/5"></div>
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-[11px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest">Siap Cetak</p>
+              <h3 className="text-3xl font-black text-gray-900 dark:text-slate-50 mt-2">12</h3>
+              <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Sertifikat siap cetak</p>
+            </div>
+            <div className="h-11 w-11 rounded-2xl flex items-center justify-center ring-1 ring-black/5 dark:ring-white/10 bg-rs-light-blue/10 dark:bg-rs-light-blue/15 text-rs-light-blue">
+              <FileText size={20} strokeWidth={2.5} />
+            </div>
+          </div>
         </div>
 
         {/* Global Security Verify */}
-        <div className="bg-white dark:bg-slate-900 border-2 border-dashed border-gray-200 dark:border-slate-800 rounded-3xl p-6 flex items-center justify-center flex-col text-center shadow-sm">
+        <div className="bg-white dark:bg-slate-900 border-2 border-dashed border-gray-200 dark:border-slate-800 rounded-2xl p-6 flex items-center justify-center flex-col text-center shadow-sm">
            <Search size={32} className="text-gray-400 dark:text-slate-500 mb-3" />
            <p className="text-gray-600 dark:text-slate-400 text-sm font-bold mb-3">Verifikasi Silang Dokumen Digital</p>
            <button className="w-full py-2.5 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 font-bold rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 transition flex items-center justify-center gap-2">
@@ -95,8 +113,8 @@ const CertificateManagementPage = () => {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
-        <div className="p-6 border-b border-gray-50 dark:border-slate-800 flex flex-col sm:flex-row justify-between gap-4 bg-gray-50/50 dark:bg-slate-800/30">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100/80 dark:border-slate-800 overflow-hidden">
+        <div className="p-6 border-b border-gray-100/70 dark:border-slate-800 flex flex-col sm:flex-row justify-between gap-4 bg-gray-50/60 dark:bg-slate-800/30">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
             <input 
@@ -104,7 +122,7 @@ const CertificateManagementPage = () => {
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               placeholder="Cari ID Sertifikat atau Nama Pasien..." 
-              className="w-full pl-12 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-rs-light-blue/40 outline-none font-medium text-gray-800 dark:text-slate-200 transition-all shadow-sm" 
+              className="w-full pl-12 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-primary/40 outline-none font-medium text-gray-800 dark:text-slate-200 transition-all shadow-sm" 
             />
           </div>
         </div>
@@ -112,13 +130,13 @@ const CertificateManagementPage = () => {
         <div className="overflow-x-auto min-h-[400px]">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-slate-400 font-bold border-b border-gray-100 dark:border-slate-800">
-                <th className="py-3 px-5 tracking-wider text-xs uppercase">No. Dokumen</th>
-                <th className="py-3 px-5 tracking-wider text-xs uppercase">Identitas Pasien</th>
-                <th className="py-3 px-5 tracking-wider text-xs uppercase">Jenis Vaksin</th>
-                <th className="py-3 px-5 tracking-wider text-xs uppercase">Tgl Rilis</th>
-                <th className="py-3 px-5 tracking-wider text-xs uppercase">Status</th>
-                <th className="py-3 px-5 tracking-wider text-xs uppercase text-right">Aksi</th>
+              <tr className="bg-gray-50/50 dark:bg-slate-800/50 text-xs font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest border-b border-gray-100/70 dark:border-slate-800">
+                <th className="py-4 px-6">No. Dokumen</th>
+                <th className="py-4 px-6">Identitas Pasien</th>
+                <th className="py-4 px-6">Jenis Vaksin</th>
+                <th className="py-4 px-6">Tgl Rilis</th>
+                <th className="py-4 px-6">Status</th>
+                <th className="py-4 px-6 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-slate-800/50">
@@ -131,36 +149,36 @@ const CertificateManagementPage = () => {
                 </tr>
               ) : filteredCerts.length > 0 ? (
                 filteredCerts.map((cert) => (
-                  <tr key={cert.id} className="hover:bg-blue-50/30 dark:hover:bg-slate-800/50 transition-colors group">
-                    <td className="py-3 px-5 font-bold text-gray-800 dark:text-slate-200 whitespace-nowrap text-sm">
+                  <tr key={cert.id} className="hover:bg-gray-50/70 dark:hover:bg-slate-800/30 transition-colors group">
+                    <td className="py-4 px-6 font-bold text-gray-800 dark:text-slate-200 whitespace-nowrap text-sm">
                       {cert.id}
                       {cert.valid && <CheckCircle2 size={14} className="inline ml-2 text-green-500" title="Valid Secara Kriptografi" />}
                       {!cert.valid && <AlertTriangle size={14} className="inline ml-2 text-yellow-500" title="Belum Tervalidasi" />}
                     </td>
-                    <td className="py-3 px-5 font-medium text-gray-700 dark:text-slate-300 text-sm">
+                    <td className="py-4 px-6 font-medium text-gray-700 dark:text-slate-300 text-sm">
                       {cert.ptName}
                     </td>
-                    <td className="py-3 px-5 text-gray-600 dark:text-slate-400 text-sm">
+                    <td className="py-4 px-6 text-gray-600 dark:text-slate-400 text-sm">
                       {cert.vaxType}
                     </td>
-                    <td className="py-3 px-5 text-gray-600 dark:text-slate-400 text-sm">
+                    <td className="py-4 px-6 text-gray-600 dark:text-slate-400 text-sm">
                       {cert.date}
                     </td>
-                    <td className="py-3 px-5">
+                    <td className="py-4 px-6">
                       {getStatusBadge(cert.status)}
                     </td>
-                    <td className="py-3 px-5 text-right">
+                    <td className="py-4 px-6 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button 
                           disabled={cert.status === 'VERIFIKASI'}
-                          className="p-2 text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed group-hover:opacity-100 opacity-60" 
+                          className="p-2 text-gray-400 hover:text-rs-light-blue dark:hover:text-rs-light-blue hover:bg-rs-light-blue/10 dark:hover:bg-rs-light-blue/15 rounded-xl transition-colors disabled:opacity-30 disabled:cursor-not-allowed group-hover:opacity-100 opacity-60" 
                           title="Pratinjau Dokumen"
                         >
                           <FileText size={18} />
                         </button>
                         <button 
                           disabled={cert.status === 'VERIFIKASI'}
-                          className="px-3 py-1.5 bg-rs-light-blue text-white text-[10px] uppercase font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                          className="px-3 py-1.5 bg-primary hover:bg-rs-blue-dark text-white text-[10px] uppercase font-bold rounded-xl transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
                         >
                           <Printer size={12} /> Cetak
                         </button>

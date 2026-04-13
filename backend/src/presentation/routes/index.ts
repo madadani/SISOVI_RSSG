@@ -1,4 +1,7 @@
 import { Router } from 'express';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 
 // Use Cases
 import { GetLocationsUseCase } from '../../application/use-cases/GetLocationsUseCase';
@@ -64,7 +67,7 @@ export function createRouter(): Router {
   // ── Controllers (Presentation) ────────────────────────────
   const healthCtrl = new HealthController();
   const locationCtrl = new LocationController(getLocationsUC);
-  const vaccineCtrl = new VaccineController(getVaccinesUC, updateVaccineUC);
+  const vaccineCtrl = new VaccineController(getVaccinesUC, updateVaccineUC, vaccineRepo);
   const questionCtrl = new ScreeningQuestionController(getQuestionsUC);
   const registrationCtrl = new RegistrationController(registerPatientUC, getRegistrationStatusUC);
   const dashboardCtrl = new DashboardController(getDashboardStatsUC);
@@ -87,6 +90,101 @@ export function createRouter(): Router {
   router.get('/admin/queues', (req, res) => adminCtrl.getQueues(req, res));
   router.put('/admin/queues/:queueNumber/status', (req, res) => adminCtrl.setQueueStatus(req, res));
   router.get('/admin/certificates', (req, res) => adminCtrl.getCertificates(req, res));
+
+  // ── File Upload Config ────────────────────────────────────
+  const uploadsDir = path.join(__dirname, '../../../uploads');
+  if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+
+  const storage = multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, uploadsDir),
+    filename: (_req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+  });
+  const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
+
+  // ── Document Upload Route ─────────────────────────────────
+  router.post('/documents/upload', upload.single('file'), async (req, res) => {
+    try {
+      const { registrationId, type } = req.body;
+      const file = req.file;
+
+      if (!file || !registrationId || !type) {
+        res.status(400).json({ error: 'File, registrationId, and type are required' });
+        return;
+      }
+
+      // Check if document already exists for this registration + type
+      const existing = await prisma.document.findFirst({
+        where: { registrationId, type }
+      });
+
+      if (existing) {
+        // Update existing document
+        const updated = await prisma.document.update({
+          where: { id: existing.id },
+          data: {
+            filePath: file.path,
+            status: 'PENDING',
+            notes: null,
+            verifiedBy: null,
+            verifiedAt: null
+          }
+        });
+        res.json({ success: true, document: updated });
+      } else {
+        // Create new document
+        const doc = await prisma.document.create({
+          data: {
+            registrationId,
+            type,
+            filePath: file.path,
+            status: 'PENDING'
+          }
+        });
+        res.json({ success: true, document: doc });
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      res.status(500).json({ error: 'Failed to upload document' });
+    }
+  });
+
+  // ── Certificate Download Route ────────────────────────────
+  router.get('/certificates/:id/download', async (req, res) => {
+    try {
+      const cert = await prisma.certificate.findUnique({
+        where: { id: req.params.id },
+        include: { patient: true, vaccine: true }
+      });
+
+      if (!cert) {
+        res.status(404).json({ error: 'Certificate not found' });
+        return;
+      }
+
+      // If a physical file exists, send it
+      if (cert.filePath && fs.existsSync(cert.filePath)) {
+        res.download(cert.filePath);
+        return;
+      }
+
+      // Otherwise generate a simple text-based response
+      res.json({
+        id: cert.id,
+        patientName: cert.patient.name,
+        vaccineName: cert.vaccine.name,
+        batchNumber: cert.batchNumber,
+        doctorName: cert.doctorName,
+        issuedDate: cert.issuedDate,
+        message: 'No physical file available. Use print from frontend.'
+      });
+    } catch (error) {
+      console.error('Certificate download error:', error);
+      res.status(500).json({ error: 'Failed to download certificate' });
+    }
+  });
 
   return router;
 }

@@ -12,24 +12,24 @@ const SearchForm = ({ onSearch, isLoading }) => {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-4 mb-8">
       <div className="flex-1">
-        <label className="block text-sm font-semibold text-gray-700 mb-1">NIK atau No. RM</label>
+        <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">NIK atau No. RM</label>
         <input 
           type="text" 
           required 
           value={formData.nik}
           onChange={(e) => setFormData({ ...formData, nik: e.target.value })}
-          className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-rs-light-blue outline-none font-medium text-gray-800" 
+          className="w-full p-4 border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl focus:border-rs-light-blue dark:focus:border-rs-light-blue outline-none font-medium text-gray-800 dark:text-white transition-colors" 
           placeholder="Masukkan NIK atau No. RM" 
         />
       </div>
       <div className="flex-1">
-        <label className="block text-sm font-semibold text-gray-700 mb-1">Tanggal Lahir</label>
+        <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Tanggal Lahir</label>
         <input 
           type="date" 
           required 
           value={formData.dob}
           onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-          className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-rs-light-blue outline-none font-medium text-gray-700" 
+          className="w-full p-4 border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl focus:border-rs-light-blue dark:focus:border-rs-light-blue outline-none font-medium text-gray-700 dark:text-white transition-colors" 
         />
       </div>
       <div className="flex items-end">
