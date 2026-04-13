@@ -14,8 +14,8 @@ Aplikasi web berbasis React dan Node.js yang ditujukan untuk melayani pendaftara
 Konfigurasi Docker project ini sudah disiapkan untuk:
 
 - Base image aplikasi: AlmaLinux 9
-- Backend: `http://localhost:8002`
-- Frontend: `http://localhost:3014`
+- Backend: `http://192.168.100.9:8002`
+- Frontend: `http://192.168.100.9:3014`
 - Database: MySQL eksternal (di luar `docker-compose`)
 
 ### 1. Build dan Jalankan Semua Service
@@ -69,7 +69,7 @@ Saat container backend start, Prisma akan menjalankan `prisma db push` otomatis.
 2. Jalankan `npm install`
 3. Salin/buat file `.env` dari konfigurasi default:
    ```env
-   DATABASE_URL="mysql://user:password@localhost:3306/sisov_rssg"
+   DATABASE_URL="mysql://user:password@192.168.100.9:3306/sisov_rssg"
    PORT=8002
    JWT_SECRET="secret_key_rssg"
    ```
@@ -82,7 +82,7 @@ Saat container backend start, Prisma akan menjalankan `prisma db push` otomatis.
 
 1. Masuk ke direktori `frontend/`
 2. Jalankan `npm install`
-3. Jalankan `npm run dev` untuk server dev di `http://localhost:5173`.
+3. Jalankan `npm run dev` untuk server dev di `http://192.168.100.9:5173`.
 
 ## API Documentation
 

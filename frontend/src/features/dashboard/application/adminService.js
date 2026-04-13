@@ -5,7 +5,7 @@ export const adminService = {
     const response = await axiosInstance.get('/vaccines/admin');
     return response.data;
   },
-  
+
   async getDashboardStats() {
     const response = await axiosInstance.get('/dashboard');
     return response.data;
