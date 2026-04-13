@@ -27,11 +27,14 @@ class RegisterPatientUseCase {
                     no_rm: dto.no_rm ?? null,
                 });
             }
-            // 2. Generate queue number
+            // 2. Generate queue number (format: V001, V
+            // 002, ...)
             const today = new Date();
-            const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '');
-            const randomNum = String(Math.floor(Math.random() * 999) + 1).padStart(3, '0');
-            const queueNumber = `VK-${dateStr}-${randomNum}`;
+            const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000);
+            const todayCount = await this.registrationRepository.countByDateRange(startOfDay, endOfDay);
+            const nextNum = String(todayCount + 1).padStart(3, '0');
+            const queueNumber = `A${nextNum}`;
             // 3. Create registration
             const sd = new Date(dto.scheduleDate);
             if (isNaN(sd.getTime())) {

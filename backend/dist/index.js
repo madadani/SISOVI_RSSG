@@ -5,6 +5,6 @@ const app_1 = require("./app");
 const app = (0, app_1.createApp)();
 app.listen(env_1.env.PORT, () => {
     console.log(`🚀 Server running on port ${env_1.env.PORT}`);
-    console.log(`📋 Health check: http://localhost:${env_1.env.PORT}/health`);
+    console.log(`📋 Health check: http://192.168.100.9:${env_1.env.PORT}/api/health`);
 });
 //# sourceMappingURL=index.js.map

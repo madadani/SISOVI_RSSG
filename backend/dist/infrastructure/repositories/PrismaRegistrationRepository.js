@@ -73,6 +73,16 @@ class PrismaRegistrationRepository {
         });
         return reg;
     }
+    async countByDateRange(start, end) {
+        return this.prisma.registration.count({
+            where: {
+                createdAt: {
+                    gte: start,
+                    lt: end,
+                },
+            },
+        });
+    }
 }
 exports.PrismaRegistrationRepository = PrismaRegistrationRepository;
 //# sourceMappingURL=PrismaRegistrationRepository.js.map

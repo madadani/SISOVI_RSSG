@@ -78,11 +78,28 @@ class AdminController {
     }
     async setQueueStatus(req, res) {
         try {
-            const queueNumber = req.params.queueNumber;
-            const { status } = req.body;
+            const identifier = req.params.queueNumber;
+            let { status } = req.body;
+            // Map frontend status to Prisma enum if necessary
+            if (status === 'DONE')
+                status = 'COMPLETED';
+            if (status === 'SKIPPED')
+                status = 'CANCELLED';
+            const reg = await prisma.registration.findFirst({
+                where: {
+                    OR: [
+                        { queueNumber: identifier },
+                        { id: identifier }
+                    ]
+                }
+            });
+            if (!reg) {
+                res.status(404).json({ error: 'Queue not found' });
+                return;
+            }
             // Using explicit cast to avoid enum errors
             await prisma.registration.update({
-                where: { queueNumber },
+                where: { id: reg.id },
                 data: { status: status }
             });
             res.json({ success: true });

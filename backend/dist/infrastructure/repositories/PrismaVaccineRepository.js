@@ -5,6 +5,9 @@ class PrismaVaccineRepository {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async findAll() {
+        return this.prisma.vaccine.findMany();
+    }
     async findAllActive() {
         return this.prisma.vaccine.findMany({
             where: { isActive: true },
@@ -19,6 +22,11 @@ class PrismaVaccineRepository {
         return this.prisma.vaccine.update({
             where: { id },
             data,
+        });
+    }
+    async delete(id) {
+        await this.prisma.vaccine.delete({
+            where: { id },
         });
     }
 }

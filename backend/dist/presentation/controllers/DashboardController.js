@@ -11,6 +11,8 @@ class DashboardController {
             res.json(stats);
         }
         catch (error) {
+            // Keep the response generic, but log details for debugging.
+            console.error('[DashboardController] Failed to fetch dashboard stats:', error);
             res.status(500).json({ error: 'Failed to fetch dashboard stats' });
         }
     }

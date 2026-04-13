@@ -5,6 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createRouter = createRouter;
 const express_1 = require("express");
+const multer_1 = __importDefault(require("multer"));
+const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
 // Use Cases
 const GetLocationsUseCase_1 = require("../../application/use-cases/GetLocationsUseCase");
 const GetVaccinesUseCase_1 = require("../../application/use-cases/GetVaccinesUseCase");
@@ -61,7 +64,7 @@ function createRouter() {
     // ── Controllers (Presentation) ────────────────────────────
     const healthCtrl = new HealthController_1.HealthController();
     const locationCtrl = new LocationController_1.LocationController(getLocationsUC);
-    const vaccineCtrl = new VaccineController_1.VaccineController(getVaccinesUC, updateVaccineUC);
+    const vaccineCtrl = new VaccineController_1.VaccineController(getVaccinesUC, updateVaccineUC, vaccineRepo);
     const questionCtrl = new ScreeningQuestionController_1.ScreeningQuestionController(getQuestionsUC);
     const registrationCtrl = new RegistrationController_1.RegistrationController(registerPatientUC, getRegistrationStatusUC);
     const dashboardCtrl = new DashboardController_1.DashboardController(getDashboardStatsUC);
@@ -69,19 +72,108 @@ function createRouter() {
     const adminCtrl = new AdminController_1.AdminController();
     // ── Mount Routes ──────────────────────────────────────────
     router.use((0, healthRoutes_1.createHealthRoutes)(healthCtrl));
-    router.use('/api/locations', (0, locationRoutes_1.createLocationRoutes)(locationCtrl));
-    router.use('/api/vaccines', (0, vaccineRoutes_1.createVaccineRoutes)(vaccineCtrl));
-    router.use('/api/questions', (0, screeningRoutes_1.createScreeningRoutes)(questionCtrl));
-    router.use('/api/register', (0, registrationRoutes_1.createRegistrationRoutes)(registrationCtrl));
-    router.get('/api/registration/status', (req, res) => registrationCtrl.getStatus(req, res));
-    router.get('/api/dashboard', (req, res) => dashboardCtrl.getStats(req, res));
-    router.get('/api/certificates', (req, res) => certificateCtrl.getByPatient(req, res));
+    router.use('/locations', (0, locationRoutes_1.createLocationRoutes)(locationCtrl));
+    router.use('/vaccines', (0, vaccineRoutes_1.createVaccineRoutes)(vaccineCtrl));
+    router.use('/questions', (0, screeningRoutes_1.createScreeningRoutes)(questionCtrl));
+    router.use('/register', (0, registrationRoutes_1.createRegistrationRoutes)(registrationCtrl));
+    router.get('/registration/status', (req, res) => registrationCtrl.getStatus(req, res));
+    router.get('/dashboard', (req, res) => dashboardCtrl.getStats(req, res));
+    router.get('/certificates', (req, res) => certificateCtrl.getByPatient(req, res));
     // Admin Routes
-    router.get('/api/admin/patients', (req, res) => adminCtrl.getPatients(req, res));
-    router.delete('/api/admin/patients/:id', (req, res) => adminCtrl.deletePatient(req, res));
-    router.get('/api/admin/queues', (req, res) => adminCtrl.getQueues(req, res));
-    router.put('/api/admin/queues/:queueNumber/status', (req, res) => adminCtrl.setQueueStatus(req, res));
-    router.get('/api/admin/certificates', (req, res) => adminCtrl.getCertificates(req, res));
+    router.get('/admin/patients', (req, res) => adminCtrl.getPatients(req, res));
+    router.delete('/admin/patients/:id', (req, res) => adminCtrl.deletePatient(req, res));
+    router.get('/admin/queues', (req, res) => adminCtrl.getQueues(req, res));
+    router.put('/admin/queues/:queueNumber/status', (req, res) => adminCtrl.setQueueStatus(req, res));
+    router.get('/admin/certificates', (req, res) => adminCtrl.getCertificates(req, res));
+    // ── File Upload Config ────────────────────────────────────
+    const uploadsDir = path_1.default.join(__dirname, '../../../uploads');
+    if (!fs_1.default.existsSync(uploadsDir))
+        fs_1.default.mkdirSync(uploadsDir, { recursive: true });
+    const storage = multer_1.default.diskStorage({
+        destination: (_req, _file, cb) => cb(null, uploadsDir),
+        filename: (_req, file, cb) => {
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            cb(null, uniqueSuffix + path_1.default.extname(file.originalname));
+        }
+    });
+    const upload = (0, multer_1.default)({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
+    // ── Document Upload Route ─────────────────────────────────
+    router.post('/documents/upload', upload.single('file'), async (req, res) => {
+        try {
+            const { registrationId, type } = req.body;
+            const file = req.file;
+            if (!file || !registrationId || !type) {
+                res.status(400).json({ error: 'File, registrationId, and type are required' });
+                return;
+            }
+            // Check if document already exists for this registration + type
+            const existing = await prisma_1.default.document.findFirst({
+                where: { registrationId, type }
+            });
+            if (existing) {
+                // Update existing document
+                const updated = await prisma_1.default.document.update({
+                    where: { id: existing.id },
+                    data: {
+                        filePath: file.path,
+                        status: 'PENDING',
+                        notes: null,
+                        verifiedBy: null,
+                        verifiedAt: null
+                    }
+                });
+                res.json({ success: true, document: updated });
+            }
+            else {
+                // Create new document
+                const doc = await prisma_1.default.document.create({
+                    data: {
+                        registrationId,
+                        type,
+                        filePath: file.path,
+                        status: 'PENDING'
+                    }
+                });
+                res.json({ success: true, document: doc });
+            }
+        }
+        catch (error) {
+            console.error('Upload error:', error);
+            res.status(500).json({ error: 'Failed to upload document' });
+        }
+    });
+    // ── Certificate Download Route ────────────────────────────
+    router.get('/certificates/:id/download', async (req, res) => {
+        try {
+            const cert = await prisma_1.default.certificate.findUnique({
+                where: { id: req.params.id },
+                include: { patient: true, vaccine: true }
+            });
+            if (!cert) {
+                res.status(404).json({ error: 'Certificate not found' });
+                return;
+            }
+            // If a physical file exists, send it
+            if (cert.filePath && fs_1.default.existsSync(cert.filePath)) {
+                res.download(cert.filePath);
+                return;
+            }
+            // Otherwise generate a simple text-based response
+            res.json({
+                id: cert.id,
+                patientName: cert.patient.name,
+                vaccineName: cert.vaccine.name,
+                batchNumber: cert.batchNumber,
+                doctorName: cert.doctorName,
+                issuedDate: cert.issuedDate,
+                message: 'No physical file available. Use print from frontend.'
+            });
+        }
+        catch (error) {
+            console.error('Certificate download error:', error);
+            res.status(500).json({ error: 'Failed to download certificate' });
+        }
+    });
     return router;
 }
 //# sourceMappingURL=index.js.map
